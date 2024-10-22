@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  backend:
+    container_name: recipe-backend
+    build:
+      context: ./backend  # Assuming your backend code is in the 'backend' folder
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/recipeDB
+    networks:
+      - recipe-net
+
+  mongo:
+    container_name: recipe-mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - recipe-net
+
+  frontend:
+    container_name: recipe-frontend
+    build:
+      context: ./client  # Assuming your frontend code is in the 'frontend' folder
+    ports:
+      - "3000:3000"  # Change this if your React app uses a different port
+    networks:
+      - recipe-net
+
+networks:
+  recipe-net:
+    driver: bridge
